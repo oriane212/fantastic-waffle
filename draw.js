@@ -21,7 +21,7 @@ $('#canvas').mousedown(function(e){
 
 $('#canvas').mousemove(function(e){
     if(paint){
-        addClick(mouseX, mouseY);
+        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
         redraw();
     }
 });
