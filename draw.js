@@ -1,68 +1,34 @@
+var points = [];
 
-
-var canvasDiv = document.getElementById('canvasDiv');
-canvas = document.createElement('canvas');
-canvas.setAttribute('width', canvasWidth);
-canvas.setAttribute('height', canvasHeight);
-canvas.setAttribute('id', 'canvas');
-canvasDiv.appendChild(canvas);
-if (typeof G_vmlCanvasManager != 'undefined') {
-    canvas = G_vmlCanvasManager.initElement(canvas);
-}
-context = canvas.getContext("2d");
-
-$('#canvas').mousedown(function(e){
-    var mouseX = e.pageX - this.offsetLeft;
-    var mouseY = e.pageY - this.offsetTop;
-
-    paint = true;
-    addClick(mouseX,mouseY);
-});
-
-$('#canvas').mousemove(function(e){
-    if(paint){
-        addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-        redraw();
-    }
-});
-
-$('#canvas').mouseup(function(e){
-    paint = false;
-});
-
-$('#canvas').mouseleave(function(e){
-    paint = false;
-});
-
-var clickX = new Array();
-var clickY = new Array();
-var clickDrag = new Array();
-var paint;
-
-function addClick(x,y,dragging){
-    clickX.push(x);
-    clickY.push(y);
-    clickDrag.push(dragging);
+function setup(){
+    var myCanvas = createCanvas(640,1136);
+    myCanvas.parent('canvasDiv');
+    $(myCanvas.canvas).css("border-style",'solid');
+    $(myCanvas.canvas).css("border-width",'5px');
+    console.log(myCanvas);
+    line(15,25,70,90);
 }
 
-function redraw(){
-    context.clearRect(0,0,context.canvas.width,context.canvas.height);
+function mouseDragged(){
+    //fill(0);
+    //ellipse(mouseX,mouseY,3,3);
+    points.push([mouseX, mouseY]);
+    //clear canvas
+    drawPolyline(points);
+}
 
-    context.strokeStyle = "#df4b26";
-    context.lineJoin = "round";
-    context.lineWidth = 5;
-
-    for (var i=0; i < clickX.length; i++){
-        context.beginPath();
-        if (clickDrag[i] && i){
-            context.moveTo(clickX[i-1],clickY[i-1]);
-        }
-        else {
-            context.moveTo(clickX[i]-1, clickY[i]-1);
-        }
-
-        context.lineTo(clickX[i], clickY[i]);
-        context.closePath();
-        context.stroke();
+function drawPolyline(points){
+    for (var i = 0; i < points.length-1; i++){
+        var point1 = points[i];
+        var x1 = point1[0];
+        var y1 = point1[1];
+        var point2 = points[i+1];
+        var x2 = point2[0];
+        var y2 = point2[1];
+        line(x1,y1,x2,y2);
     }
+}
+
+function mouseReleased(){
+    points = [];
 }
